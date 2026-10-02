@@ -1,0 +1,1 @@
+{"name":"virtual-school-cloudflare","version":"1.0.0","private":true,"type":"module","scripts":{"deploy":"wrangler deploy","dev":"wrangler dev","db:migrate":"wrangler d1 migrations apply virtual-school-db --remote"},"devDependencies":{"wrangler":"^4.40.0"}}
