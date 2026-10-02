@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY, role TEXT NOT NULL, name TEXT NOT NULL, phone_hash TEXT UNIQUE NOT NULL, phone_enc TEXT NOT NULL, father_name_enc TEXT, password_hash TEXT, password_salt TEXT, active INTEGER DEFAULT 1, created_at TEXT NOT NULL, updated_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS classes(id TEXT PRIMARY KEY, grade INTEGER NOT NULL, name TEXT NOT NULL UNIQUE);
+CREATE TABLE IF NOT EXISTS students(id TEXT PRIMARY KEY, user_id TEXT, class_id TEXT, name_enc TEXT NOT NULL, national_id_enc TEXT, guardian_phone_enc TEXT, guardian_phone_hash TEXT, updated_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS otps(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,phone_hash TEXT NOT NULL,code_hash TEXT NOT NULL,recovery_hash TEXT,expires_at INTEGER NOT NULL,used INTEGER DEFAULT 0,purpose TEXT NOT NULL,attempts INTEGER DEFAULT 0,created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS sessions(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,token_hash TEXT NOT NULL,csrf_token TEXT NOT NULL,expires_at INTEGER NOT NULL,revoked INTEGER DEFAULT 0,created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS audit(id TEXT PRIMARY KEY,user_id TEXT,action TEXT,ip TEXT,created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS attendance(id TEXT PRIMARY KEY,student_id TEXT NOT NULL,date TEXT NOT NULL,status TEXT NOT NULL,note TEXT,updated_at TEXT NOT NULL,UNIQUE(student_id,date));
+CREATE TABLE IF NOT EXISTS evaluations(id TEXT PRIMARY KEY,student_id TEXT NOT NULL,subject TEXT NOT NULL,date TEXT NOT NULL,type TEXT NOT NULL,value TEXT,note TEXT,updated_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS home_activities(id TEXT PRIMARY KEY,student_id TEXT NOT NULL,date TEXT NOT NULL,subject TEXT NOT NULL,duration INTEGER DEFAULT 0,lesson TEXT,strength TEXT,note TEXT,updated_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS assignments(id TEXT PRIMARY KEY,subject TEXT NOT NULL,title TEXT NOT NULL,due_date TEXT,description TEXT,created_by TEXT,updated_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS resources(id TEXT PRIMARY KEY,subject TEXT NOT NULL,title TEXT NOT NULL,type TEXT,url TEXT,description TEXT,created_by TEXT,updated_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS changes(id TEXT PRIMARY KEY,entity TEXT,entity_id TEXT,payload TEXT,updated_at TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_attendance_date ON attendance(date);
+CREATE INDEX IF NOT EXISTS idx_eval_student ON evaluations(student_id);
+CREATE INDEX IF NOT EXISTS idx_home_student ON home_activities(student_id);
+CREATE INDEX IF NOT EXISTS idx_student_guardian ON students(guardian_phone_hash);
